@@ -29,15 +29,3 @@ class VanillaNet:
             curr = expit(curr.dot(weight_matrix))
 
         return curr
-
-"""
-import numpy as np
-from vanillaNet import VanillaNet
-nn = VanillaNet([2,2,2])
-w1 = np.array([[0.15, 0.20], [0.25, 0.30], [0.35, 0.35]])
-w2 = np.array([[0.40, 0.45], [0.5, 0.55], [0.60, 0.60]])
-data = np.array([[0.05, 0.10]])
-weights = [w1, w2]
-nn.weights = weights
-print (nn.feed_forward(data))
-"""
