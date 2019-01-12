@@ -12,6 +12,6 @@ def test_feed_forward():
     data = np.array([[0.05, 0.10]])
 
     # test results
-    expected_result = np.array([[0.75693192, 0.76771788]])
+    expected_result = np.array([[0.7569319154399385, 0.7677178798069613]])
     actual_result   = nn.feed_forward(data)
     assert((actual_result == expected_result).all())
