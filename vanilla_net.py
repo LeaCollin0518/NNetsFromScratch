@@ -11,11 +11,13 @@ class VanillaNet:
 
     def initialize_weights(self):
         self.weights = []
+
         for fst, snd in zip(self.dims, self.dims[1:]):
-            self.weights.append(np.random.normal(0.0, 1.0, size = (fst + 1, snd))) # +1 for bias
+            weight_matrix = np.random.normal(0.0, 1.0, size=(fst+1, snd)) # +1 for bias
+            self.weights.append(weight_matrix)
 
     def feed_forward(self, datum):
-        # ensure that input data is a column vector (dims[0] x 1)
+        # input data is a row vector (1 x dims[0])
         assert(len(datum.shape) == 2 and datum.shape[0] == 1 and datum.shape[1] == self.dims[0])
 
         one = np.array([[1]])
@@ -23,7 +25,7 @@ class VanillaNet:
 
         for weight_matrix in self.weights:
             # adding bias term
-            curr = np.concatenate((curr, one), axis = 1)
+            curr = np.concatenate([curr, one], axis=1)
 
             # feed forward one layer
             curr = expit(curr.dot(weight_matrix))
