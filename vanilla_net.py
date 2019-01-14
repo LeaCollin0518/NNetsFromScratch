@@ -31,3 +31,7 @@ class VanillaNet:
             curr = expit(curr.dot(weight_matrix))
 
         return curr
+
+    @staticmethod
+    def calculate_error(target, output):
+        return np.sum(0.5*(target - output)**2) 
