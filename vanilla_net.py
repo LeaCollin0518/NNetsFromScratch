@@ -34,4 +34,5 @@ class VanillaNet:
 
     @staticmethod
     def calculate_error(target, output):
-        return np.sum(0.5*(target - output)**2) 
+        return np.sum(0.5*(target - output)**2)
+
