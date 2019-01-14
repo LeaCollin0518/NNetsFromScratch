@@ -7,9 +7,9 @@ class VanillaNet:
         assert(len(dims) >= 2)
 
         self.dims = dims
-        self.initialize_weights()
+        self._initialize_weights()
 
-    def initialize_weights(self):
+    def _initialize_weights(self):
         self.weights = []
 
         for fst, snd in zip(self.dims, self.dims[1:]):
