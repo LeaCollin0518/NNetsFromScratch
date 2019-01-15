@@ -17,7 +17,7 @@ class VanillaNet:
             self.weights.append(weight_matrix)
 
     def feed_forward(self, datum):
-        #  input data is a row vector (1 x dims[0])
+        # input data is a row vector (1 x dims[0])
         assert(len(datum.shape) == 2 and datum.shape[0] == 1 and datum.shape[1] == self.dims[0])
 
         one = np.array([[1]])
