@@ -9,14 +9,25 @@ def test_feed_forward():
     actual_result   = nn.feed_forward(datum)
     assert((actual_result == expected_result).all())
 
-def test_backprop():
+def test_backprop_single_row():
+    nn, datum = get_testnet_datum()
+
+    expected_result = np.array([[0.01, 0.99]])
+
+    for _ in range(10000):
+        nn.train(datum, expected_result)
+    actual_result = nn.feed_forward(datum)
+
+    epsilon, error =  0.05, VanillaNet.calculate_error(actual_result, expected_result)
+    assert(error < epsilon)
+
+# data,targets = tuple(map(lambda row: np.repeat(row, 200000, axis=0), (datum,target)))
+
+def test_backprop_100_rows():
     nn, datum = get_testnet_datum()
 
     expected_result = np.array([[0.01, 0.99]])
     actual_result = np.array([[-0.50, -0.50]]) # TODO: implement backprop functionaliatiy
-
-    epsilon, error =  0.001, VanillaNet.calulate_error(expected_result, actual_result)
-    assert(error < epsilon)
 
 def get_testnet_datum():
     # initialize nn
