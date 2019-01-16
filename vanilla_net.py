@@ -100,12 +100,14 @@ class VanillaNet:
 
         for i in range(n_epochs):
             epoch_err = 0
-            mini_batches, mini_targets = tuple(map(lambda M: np.split(M, n_batches), (data, targets)))
+            mini_batches, mini_targets = tuple(map(lambda M: np.array_split(M, n_batches), (data, targets)))
 
             for mini_batch, mini_target in zip(mini_batches, mini_targets):
                 epoch_err += self._backprop(mini_batch, mini_target)
 
-            epoch_errs.append(epoch_err / n_batches)
+            epoch_err /= n_batches
+            epoch_errs.append(epoch_err)
+            print ("Epoch:  {}, MSE: {}".format(i, epoch_err))
 
         return epoch_errs
 
