@@ -75,8 +75,8 @@ class VanillaNet:
                     activation_i = activations[layer_i]
                     grad_wrt_activations = -(target - activation_i)
                 else:
-                    activation_i = activations[layer_i][:,:-1]
-                    grad_wrt_activations = self.weights[layer_i].dot(deltas.T).T[:,:-1]
+                    activation_i = activations[layer_i][:,:-1] # remove bias
+                    grad_wrt_activations = self.weights[layer_i].dot(deltas.T).T[:,:-1] # remove bias
 
                 deltas = grad_wrt_activations * (activation_i * (1 - activation_i))
                 gradients[layer_i-1] += activations[layer_i-1].T.dot(deltas)
