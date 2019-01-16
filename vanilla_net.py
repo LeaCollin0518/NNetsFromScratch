@@ -13,9 +13,9 @@ class VanillaNet:
         assert(learning_rate > 0)
 
         self.dims = dims
-        self._initialize_weights()
-
         self.learning_rate = learning_rate
+
+        self._initialize_weights()
 
     def _initialize_weights(self):
         self.weights = []
@@ -58,19 +58,17 @@ class VanillaNet:
         assert(len(targets.shape) == 2 and targets.shape[1] == self.dims[-1])
 
         n_rows = data.shape[0]
-
         gradients = [np.zeros(weight_matrix.shape) for weight_matrix in self.weights]
-
         err = 0
 
         for row in range(n_rows):
-            # extract row i of data and target
+            # extract row of data and target
             datum, target = tuple(map(lambda M: M[row,:].reshape(1, M.shape[1]), (data, targets)))
 
             activations = self.feed_forward(datum, for_backprop=True)
 
             # keep track of error
-            err += np.sum(0.5*(target - activations[-1])**2)
+            err += mse(target, activations[-1])
 
             # calculate gradients for each layer
             for layer_i in reversed(range(len(self.dims))):
@@ -94,19 +92,22 @@ class VanillaNet:
 
         return err / n_rows
 
-    def train(self, data, targets, num_batches, num_epochs):
+    def train(self, data, targets, n_batches, n_epochs):
         # number of batches should not exceed number of datapoints
-        assert(data.shape[0] >= num_batches)
+        assert(data.shape[0] >= n_batches)
 
         epoch_errs = []
 
-        for i in range(num_epochs):
+        for i in range(n_epochs):
             epoch_err = 0
-            mini_batches, mini_targets = tuple(map(lambda M: np.split(M, num_batches), (data, targets)))
+            mini_batches, mini_targets = tuple(map(lambda M: np.split(M, n_batches), (data, targets)))
 
             for mini_batch, mini_target in zip(mini_batches, mini_targets):
                 epoch_err += self._backprop(mini_batch, mini_target)
 
-            epoch_errs.append(epoch_err / num_batches)
-            
+            epoch_errs.append(epoch_err / n_batches)
+
         return epoch_errs
+
+def mse(actual, expected):
+    return np.sum(0.5*(expected - actual)**2)

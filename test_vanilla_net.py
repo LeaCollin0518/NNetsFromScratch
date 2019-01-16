@@ -1,42 +1,46 @@
-from vanilla_net import VanillaNet
+from vanilla_net import VanillaNet, mse
 import numpy as np
 
 def test_feed_forward():
-    nn, datum = get_testnet_datum()
+    nn, datum, target = setup()
 
     # test results
-    expected_result = np.array([[0.7569319154399385, 0.7677178798069613]])
     actual_result   = nn.feed_forward(datum)
+    expected_result = np.array([[0.7569319154399385, 0.7677178798069613]])
     assert((actual_result == expected_result).all())
 
 def test_backprop_single_row():
-    nn, datum = get_testnet_datum()
-
-    expected_result = np.array([[0.01, 0.99]])
+    nn, datum, target = setup()
 
     for _ in range(10000):
-        nn.train(datum, expected_result)
+        nn._backprop(datum, target)
     actual_result = nn.feed_forward(datum)
 
-    epsilon, error =  0.05, VanillaNet.calculate_error(actual_result, expected_result)
+    epsilon, error =  0.05, mse(actual_result, target)
     assert(error < epsilon)
 
 # data,targets = tuple(map(lambda row: np.repeat(row, 10000, axis=0), (datum,target)))
 
-def test_backprop_100_rows():
-    nn, datum = get_testnet_datum()
+def test_train():
+    nn, datum, target = setup()
 
-    expected_result = np.array([[0.01, 0.99]])
-    actual_result = np.array([[-0.50, -0.50]]) # TODO: implement backprop functionaliatiy
+    data, targets = tuple(map(lambda M: np.repeat(M, 10000, axis=0), (datum, target)))
+    nn.train(data, targets, 1000, 10)
 
-def get_testnet_datum():
+    actual_result = nn.feed_forward(datum)
+
+    epsilon, error =  0.05, mse(actual_result, target)
+    assert(error < epsilon)
+
+def setup():
     # initialize nn
     nn = VanillaNet([2,2,2])
     w1 = np.array([[0.15, 0.20], [0.25, 0.30], [0.35, 0.35]])
     w2 = np.array([[0.40, 0.45], [0.5, 0.55], [0.60, 0.60]])
     nn.weights = [w1, w2]
 
-    # initialize datum
+    # initialize datum and target
     datum = np.array([[0.05, 0.10]])
+    target = np.array([[0.01, 0.99]])
 
-    return nn, datum
+    return nn, datum, target
