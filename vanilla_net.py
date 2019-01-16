@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.special import expit
-from collections import deque
 
 class VanillaNet:
     """
@@ -60,11 +59,11 @@ class VanillaNet:
 
         n_rows = data.shape[0]
 
-        gradients = deque([np.zeros(weight_matrix.shape) for weight_matrix in self.weights])
+        gradients = [np.zeros(weight_matrix.shape) for weight_matrix in self.weights]
 
-        for i in range(n_rows):
+        for row in range(n_rows):
             # extract row i of data and target
-            datum, target = tuple(map(lambda M: M[i,:].reshape(1, M.shape[1]), (data, targets)))
+            datum, target = tuple(map(lambda M: M[row,:].reshape(1, M.shape[1]), (data, targets)))
 
             activations = self.feed_forward(datum, for_backprop=True)
 
@@ -73,13 +72,13 @@ class VanillaNet:
                 if layer_i == 0: break # nothing to do for input layer
 
                 if layer_i == len(self.dims)-1:
-                    err_wrt_activations = -(target - activations[layer_i])
-                    curr_acts = activations[layer_i]
+                    activation_i = activations[layer_i]
+                    grad_wrt_activations = -(target - activation_i)
                 else:
-                    err_wrt_activations = self.weights[layer_i].dot(deltas.T).T[:,:-1]
-                    curr_acts = activations[layer_i][:,:-1]
+                    activation_i = activations[layer_i][:,:-1]
+                    grad_wrt_activations = self.weights[layer_i].dot(deltas.T).T[:,:-1]
 
-                deltas = err_wrt_activations * (curr_acts * (1 - curr_acts))
+                deltas = grad_wrt_activations * (activation_i * (1 - activation_i))
                 gradients[layer_i-1] += activations[layer_i-1].T.dot(deltas)
 
         for gradient in gradients:
