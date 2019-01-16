@@ -50,7 +50,7 @@ class VanillaNet:
         else:
             return curr
 
-    def train(self, data, targets):
+    def _backprop(self, data, targets):
         assert(targets.shape[0] == data.shape[0])
         # input data must be matrix (n_rows x dims[0]), n_rows >= 1
         assert(len(data.shape) == 2 and data.shape[1] == self.dims[0])
@@ -61,11 +61,16 @@ class VanillaNet:
 
         gradients = [np.zeros(weight_matrix.shape) for weight_matrix in self.weights]
 
+        err = 0
+
         for row in range(n_rows):
             # extract row i of data and target
             datum, target = tuple(map(lambda M: M[row,:].reshape(1, M.shape[1]), (data, targets)))
 
             activations = self.feed_forward(datum, for_backprop=True)
+
+            # keep track of error
+            err += np.sum(0.5*(target - activations[-1])**2)
 
             # calculate gradients for each layer
             for layer_i in reversed(range(len(self.dims))):
@@ -87,6 +92,21 @@ class VanillaNet:
         for gradient, weight_matrix in zip(gradients, self.weights):
             weight_matrix -= self.learning_rate * gradient
 
-    @staticmethod
-    def calculate_error(output, target):
-        return np.sum(0.5*(target - output)**2)
+        return err / n_rows
+
+    def train(self, data, targets, num_batches, num_epochs):
+        # number of batches should not exceed number of datapoints
+        assert(data.shape[0] >= num_batches)
+
+        epoch_errs = []
+
+        for i in range(num_epochs):
+            epoch_err = 0
+            mini_batches, mini_targets = tuple(map(lambda M: np.split(M, num_batches), (data, targets)))
+
+            for mini_batch, mini_target in zip(mini_batches, mini_targets):
+                epoch_err += self._backprop(mini_batch, mini_target)
+
+            epoch_errs.append(epoch_err / num_batches)
+            
+        return epoch_errs

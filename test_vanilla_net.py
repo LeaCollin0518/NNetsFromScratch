@@ -21,7 +21,7 @@ def test_backprop_single_row():
     epsilon, error =  0.05, VanillaNet.calculate_error(actual_result, expected_result)
     assert(error < epsilon)
 
-# data,targets = tuple(map(lambda row: np.repeat(row, 200000, axis=0), (datum,target)))
+# data,targets = tuple(map(lambda row: np.repeat(row, 10000, axis=0), (datum,target)))
 
 def test_backprop_100_rows():
     nn, datum = get_testnet_datum()
