@@ -1,6 +1,6 @@
 # Neural Networks From Scratch
 
-## `vanilla_net.py` and `test_vanilla_net.py`
+## VanillaNet in `vanilla_net.py` and `test_vanilla_net.py`
 
 `vanilla_net.py` contains a `numpy`-only implementation of multi-layer perceptron. This neural net implementation is based on [this article](https://mattmazur.com/2015/03/17/a-step-by-step-backpropagation-example/) and tested partially based on data and targets from that article as well.
 
