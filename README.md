@@ -16,4 +16,4 @@ Otherwise, to run all tests, just run
 $ pytest
 ```
 
-The `very_slow` test trains a 2 hidden layer neural net on a subset of the MNIST dataset loaded from `sci-kit`. 
+The `very_slow` test trains a 2 hidden layer neural net on a subset of the MNIST dataset loaded from `scikit`. 
