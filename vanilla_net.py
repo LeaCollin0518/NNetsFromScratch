@@ -6,7 +6,7 @@ class VanillaNet:
     Simple Multi-Layer Perceptron
     """
 
-    def __init__(self, dims, learning_rate=0.01):
+    def __init__(self, dims, learning_rate=0.1):
         # at least one layer for input and one for output
         assert(len(dims) >= 2)
         # positive learning rate

@@ -45,8 +45,7 @@ def test_MNIST():
     targets = LabelBinarizer().fit_transform(targets)
 
     # initialize the NN
-    nn_dims = [train_data.shape[1], 100, 50, targets.shape[1]]
-    nn = VanillaNet(nn_dims, learning_rate=0.1)
+    nn = VanillaNet([train_data.shape[1], 100, 50, targets.shape[1]])
 
     # train the net. 180 batch of 100 imgs each. 500 epochs
     errs = nn.train(train_data, targets, 180, 500)
